@@ -1,0 +1,49 @@
+# ===================================================
+#  Royal Frames - Production .htaccess (root deployment)
+# ===================================================
+
+# Increase upload/timeout limits
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 20M
+    php_value post_max_size 25M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+<IfModule mod_php.c>
+    php_value upload_max_filesize 20M
+    php_value post_max_size 25M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always unset X-Powered-By
+</IfModule>
+
+Options -Indexes
+
+<FilesMatch "^(?:\.htaccess|\.htpasswd|\.env|db\.php|error\.log|apply_theme\.php)$">
+    Require all denied
+</FilesMatch>
+
+<Files ".env">
+    Require all denied
+</Files>
+
+ErrorDocument 403 /index.php
+ErrorDocument 404 /index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Keep test file accessible
+    <Files "test-db.php">
+        Require all granted
+    </Files>
+
+    # Friendly route shortcuts
+    RewriteRule ^profile/?$ profile.php [L]
+    RewriteRule ^my-orders/?$ my-orders.php [L]
+    RewriteRule ^wishlist/?$ wishlist.php [L]
+</IfModule>
